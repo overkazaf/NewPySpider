@@ -33,8 +33,7 @@ def postMethod(url,values):
 	return response.read()
 
 def crawlerResource(url, method, values):
-	print values
 	if method == 'POST':
-		postMethod(url, values)
+		return postMethod(url, values)
 	else:
-		getMethod(url, values)
+		return getMethod(url, values)
