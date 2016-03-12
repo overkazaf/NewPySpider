@@ -7,7 +7,7 @@ __author__ = 'XSunny'
 
 import urllib2, urllib, fileUtil  
 
-#id = openList
+#http 请求工具
 
 def getMethod(url,values):
 	#values = {"user":"XXX","pass":"XXX"}

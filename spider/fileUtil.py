@@ -5,6 +5,8 @@
 
 __author__ = 'XSunny'
 
+#文件工具 - 包含写字节文件和字符文件，并且可以存取map对象
+
 def saveByteFile(fileName, data):
 	try:
 		f = open(fileName, "wb")
@@ -25,3 +27,9 @@ def saveTextFile(fileName, data):
 		if f:
 			f.close()
 
+#save vol info
+def saveDBFile(fileName, map):
+
+
+#return map
+def readDBFile(fileName)
