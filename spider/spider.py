@@ -76,10 +76,10 @@ def getPic(url, volNumber):
 
 #初始化下载目录 - 下载资源前，需要建立目录结构
 def initdir(volNumber):
-	if not os.path.exists("./luoo"+str(volNumber)+"/mp3/"):
-		os.makedirs("./luoo"+str(volNumber)+"/mp3/")
-	if not os.path.exists("./luoo"+str(volNumber)+"/pic/"):
-		os.makedirs("./luoo"+str(volNumber)+"/pic/")
+	if not os.path.exists("./luoo/"+str(volNumber)+"/mp3/"):
+		os.makedirs("./luoo/"+str(volNumber)+"/mp3/")
+	if not os.path.exists("./luoo/"+str(volNumber)+"/pic/"):
+		os.makedirs("./luoo/"+str(volNumber)+"/pic/")
 
 	pass
 
@@ -88,8 +88,10 @@ def initdir(volNumber):
 def test():
 	srcurl ='http://www.luoo.net/music/800'
 	volNumber = 800
-	#initdir(volNumber)#在调用下面两个方法下载资源时必须使用
-	#getPic(srcurl, volNumber)
-	#getMusic(volNumber)
+	initdir(volNumber)#在调用下面两个方法下载资源时必须使用
+	getPic(srcurl, volNumber)
+	getMusic(volNumber)
 	return getThanks(srcurl) 
 	#print html 
+
+test()
