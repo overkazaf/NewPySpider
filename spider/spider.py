@@ -25,7 +25,7 @@ def getMusic(volNumber):
 				surl = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"+str(volNumber)+"/"+str(mnumber)+".mp3"
 
 			data = httpClient.crawlerResource(surl, "GET", None)
-			fileUtil.saveByteFile("./"+str(volNumber)+"/mp3/"+str(mnumber)+".mp3", data)
+			fileUtil.saveByteFile("./luoo/"+str(volNumber)+"/mp3/"+str(mnumber)+".mp3", data)
 			mnumber = mnumber+1
 		except Exception, e:
 			print e
