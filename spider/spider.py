@@ -7,7 +7,7 @@ __author__ = 'XSunny'
 
 #爬虫模块
 
-import urllib2, urllib, fileUtil, httpClient, Parser  
+import urllib2, urllib, fileUtil, httpClient, Parser, os
 
 _default_parms  = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36", "Referer":"http://www.luoo.net/"}
 
@@ -60,7 +60,7 @@ def getPic(url, volNumber):
 		for img in imgs:
 			imgurl = Parser.getElementAttr(img, 'a', "data-img")
 			pic = httpClient.crawlerResource(imgurl, "GET", None)
-			fileUtil.saveByteFile("./"+str(volNumber)+"/pic/"+str(i)+".jpg", pic)
+			fileUtil.saveByteFile("./luoo/"+str(volNumber)+"/pic/"+str(i)+".jpg", pic)
 			i= i +1
 			#print i
 
@@ -74,11 +74,22 @@ def getPic(url, volNumber):
 		pass
 	return
 
-#
+#初始化下载目录 - 下载资源前，需要建立目录结构
+def initdir(volNumber):
+	if not os.path.exists("./luoo"+str(volNumber)+"/mp3/"):
+		os.makedirs("./luoo"+str(volNumber)+"/mp3/")
+	if not os.path.exists("./luoo"+str(volNumber)+"/pic/"):
+		os.makedirs("./luoo"+str(volNumber)+"/pic/")
+
+	pass
+
+
+#主页测试方法
 def test():
-	srcurl ='http://www.luoo.net/music/801'
-	volNumber = 801
+	srcurl ='http://www.luoo.net/music/800'
+	volNumber = 800
+	#initdir(volNumber)#在调用下面两个方法下载资源时必须使用
 	#getPic(srcurl, volNumber)
 	#getMusic(volNumber)
-	print getThanks(srcurl) 
+	return getThanks(srcurl) 
 	#print html 

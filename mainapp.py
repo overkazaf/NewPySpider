@@ -9,8 +9,7 @@ def home():
 
 @app.route('/user/crawler/config')
 def spiderConfig():
-	Spider.test()
-	return 'config crawler!'
+	return Spider.test()
 
 
 if __name__ == '__main__':
