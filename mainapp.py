@@ -3,20 +3,19 @@ import spider.spider as Spider
 
 app = Flask(__name__)
 
-#主页
 @app.route('/')
 def home():
-    return render_template('home.html')
+	return render_template('home.html')
 
-#显示结果
 @app.route('/showResult')
 def showResult():
-    return render_template('home.html')
+	musics = range(30)
+	return render_template('listMusic.html', items=musics)
 
-#爬虫配置
-@app.route('crawler/config')
+@app.route('/crawler/config')
 def spiderConfig():
-	return Spider.test()
+	Spider.test()
+	return "Crawler Start!"
 
 
 if __name__ == '__main__':
