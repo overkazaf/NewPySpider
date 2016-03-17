@@ -9,6 +9,8 @@ def home():
 
 @app.route('/showResult')
 def showResult():
+	print request.args
+	print request.form
 	musics = range(30)
 	return render_template('listMusic.html', items=musics)
 
