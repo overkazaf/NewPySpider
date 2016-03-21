@@ -12,11 +12,11 @@ def showResult():
 	print request.args
 	print request.form
 	musics = range(30)
-	return render_template('listMusic.html', items=musics)
+	return render_template('listMusic.html', items=musics[1:10])
 
 @app.route('/crawler/config')
 def spiderConfig():
-	Spider.test()
+	Spider.test(700)
 	return "Crawler Start!"
 
 

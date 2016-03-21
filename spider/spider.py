@@ -85,13 +85,12 @@ def initdir(volNumber):
 
 
 #主页测试方法
-def test():
-	srcurl ='http://www.luoo.net/music/800'
-	volNumber = 800
+def test(volNumber):
+	srcurl ='http://www.luoo.net/music/'+str(volNumber)
 	initdir(volNumber)#在调用下面两个方法下载资源时必须使用
 	getPic(srcurl, volNumber)
 	getMusic(volNumber)
 	return getThanks(srcurl) 
 	#print html 
 
-test()
+test(801)
