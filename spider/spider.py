@@ -4,6 +4,7 @@
 ' spider module '
 
 __author__ = 'XSunny'
+__modifiedBy__ = 'overkazaf'
 
 #爬虫模块
 
@@ -15,17 +16,19 @@ _default_parms  = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit
 def getMusic(volNumber):
 	#如果出现异常，则退出循环
 	goon = 1
-	mnumber =1
+	mnumber = 1
+	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
 	while (goon):
 		try:
 			surl = ''
 			if mnumber < 10:
-				surl = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"+str(volNumber)+"/0"+str(mnumber)+".mp3"
+				surl = prefix + str(volNumber)+"/0"+str(mnumber)+".mp3"
 			else:
-				surl = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"+str(volNumber)+"/"+str(mnumber)+".mp3"
+				surl = prefix + str(volNumber)+"/"+str(mnumber)+".mp3"
 
 			data = httpClient.crawlerResource(surl, "GET", None)
-			fileUtil.saveByteFile("./luoo/"+str(volNumber)+"/mp3/"+str(mnumber)+".mp3", data)
+
+			fileUtil.saveByteFile("./static/vol."+str(volNumber)+"/mp3/"+str(mnumber)+".mp3", data)
 			mnumber = mnumber+1
 		except Exception, e:
 			print e
@@ -60,7 +63,7 @@ def getPic(url, volNumber):
 		for img in imgs:
 			imgurl = Parser.getElementAttr(img, 'a', "data-img")
 			pic = httpClient.crawlerResource(imgurl, "GET", None)
-			fileUtil.saveByteFile("./luoo/"+str(volNumber)+"/pic/"+str(i)+".jpg", pic)
+			fileUtil.saveByteFile("./static/vol."+str(volNumber)+"/pic/"+str(i)+".jpg", pic)
 			i= i +1
 			#print i
 
@@ -76,10 +79,10 @@ def getPic(url, volNumber):
 
 #初始化下载目录 - 下载资源前，需要建立目录结构
 def initdir(volNumber):
-	if not os.path.exists("./luoo/"+str(volNumber)+"/mp3/"):
-		os.makedirs("./luoo/"+str(volNumber)+"/mp3/")
-	if not os.path.exists("./luoo/"+str(volNumber)+"/pic/"):
-		os.makedirs("./luoo/"+str(volNumber)+"/pic/")
+	if not os.path.exists("./static/vol."+str(volNumber)+"/mp3/"):
+		os.makedirs("./static/vol."+str(volNumber)+"/mp3/")
+	if not os.path.exists("./static/vol."+str(volNumber)+"/pic/"):
+		os.makedirs("./static/vol."+str(volNumber)+"/pic/")
 
 	pass
 
@@ -93,4 +96,4 @@ def test(volNumber):
 	return getThanks(srcurl) 
 	#print html 
 
-test(801)
+#test(801)
