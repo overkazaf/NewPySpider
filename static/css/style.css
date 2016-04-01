@@ -1,0 +1,18 @@
+@charset utf-8;
+.result {
+	margin-top: 30px;
+}
+
+.result .well{
+	margin-top: -2px;
+	background: #ffffff;
+}
+
+.thumbnail img{
+	height: 160px;
+	overflow: hidden;
+}
+
+body {
+	background: #444444;
+}

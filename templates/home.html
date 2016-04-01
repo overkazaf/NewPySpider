@@ -1,8 +1,95 @@
-<html>
-<head>
-  <title>Home</title>
-</head>
-<body>
-  <h1 style="font-style:italic">A python Webapp with Crawler</h1>
-</body>
-</html>
+{% extends "bootstrap/base.html" %} 
+{% block title %} Home{% endblock %}
+
+
+ {% block scripts %} {{ super() }}
+<script type="text/javascript" src="static/js/home.js"></script>
+{% endblock %} {% block content %}
+<link rel="stylesheet" type="text/css" href="static/css/home.css" >
+<div class="container entry">
+    <div class="row conditions">
+    	<div class="col-md-12">
+    	<h1>PySpider 落网爬虫系统</h1>
+    	<hr>
+	        <div class="col-md-4">
+	        	<ul class="nav navbar-nav">
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		                    <span>选择目标资源类型</span>
+		                    <strong class="caret"></strong>
+		                </a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="#">图片+音乐</a></li>
+		                    <li><a href="#">图片</a></li>
+		                    <li><a href="#">音乐</a></li>
+		                </ul>
+		            </li>
+		        </ul>
+	        </div>
+	        <div class="col-md-4">
+	        	<ul class="nav navbar-nav">
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		                    <span>选择抓取时间间隔</span>
+		                    <strong class="caret"></strong>
+		                </a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="#">30s</a></li>
+		                    <li><a href="#">5min</a></li>
+		                    <li><a href="#">30min</a></li>
+		                    <li><a href="#">3h</a></li>
+		                    <li><a href="#">12h</a></li>
+		                    <li>
+		                    	<input type="text" placeholder="s"> 
+		                    </li>
+		                </ul>
+		            </li>
+		        </ul>
+	        </div>
+
+	        <div class="col-md-4">
+	        	<ul class="nav navbar-nav">
+		            <li class="dropdown">
+		                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		                    <span>选择抓取期刊范围</span>
+		                    <strong class="caret"></strong>
+		                </a>
+		                <ul class="dropdown-menu">
+		                    <li><a href="#">5s</a></li>
+		                    <li><a href="#">30s</a></li>
+		                    <li><a href="#"></a></li>
+		                    <li><a href="#">ddd</a></li>
+		                </ul>
+		            </li>
+		        </ul>
+	        </div>
+	    </div>
+    </div>
+    <hr>
+    <div class="row">
+    	<div class="col-md-12">
+	    	<div class="col-md-4">
+	    		<div class="btn btn-primary btn-block btn-lg">
+					<i class="glyphicon glyphicon-ok"></i>
+	    		开始抓取</div>
+	    	</div>
+	    	<div class="col-md-4">
+	    		<div class="btn btn-warning btn-block btn-lg">
+					<i class="glyphicon glyphicon-eye-open"></i>
+	    		资源展示</div>
+	    	</div>
+	    	<div class="col-md-4">
+	    		<div class="btn btn-success btn-block btn-lg">
+					<i class="glyphicon glyphicon-picture"></i>
+	    		图表分析</div>
+	    	</div>
+	    </div>
+    </div>
+
+    <div class="row percent">
+    	<div class="circle">
+    		<span>64%</span>
+    	</div>
+    </div>
+</div>
+{% endblock %}

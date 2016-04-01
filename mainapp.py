@@ -2,16 +2,16 @@ from flask import Flask, request, render_template
 import spider.spider as Spider
 from flask.ext.bootstrap import Bootstrap
 import spider.controller as Controller
+import os
 
 __author__ = 'overkazaf'
 
 app = Flask(__name__)
-
 bootstrap = Bootstrap(app)
 
 @app.route('/')
 def home():
-	return render_template('base.html')
+	return render_template('home.html')
 
 @app.route('/showResult')
 def showResult():
@@ -22,12 +22,11 @@ def showResult():
 
 @app.route('/crawler/config')
 def spiderConfig():
-	Spider.test(700)
+	#Spider.test(700)
 	return "Crawler Start!"
 
-@app.route('/static/<path:path>')
-def luoo(path):
-	return app.send_static_file(path)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
