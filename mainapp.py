@@ -2,7 +2,6 @@ from flask import Flask, request, render_template
 import spider.spider as Spider
 from flask.ext.bootstrap import Bootstrap
 import spider.controller as Controller
-import os
 
 __author__ = 'overkazaf'
 
@@ -19,6 +18,10 @@ def showResult():
 	mp3s = resources['mp3s']
 	pics = resources['pics']
 	return render_template('listResultWithTab.html', mp3s=mp3s[1:20], pics=pics[1:20])
+
+@app.route('/showChart')
+def showChart():
+	return render_template('chart_analize.html')
 
 @app.route('/crawler/config')
 def spiderConfig():

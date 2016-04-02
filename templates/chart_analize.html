@@ -1,0 +1,51 @@
+{% extends "bootstrap/base.html" %} {% block title %} Charts{% endblock %} {% block scripts %} {{ super() }}
+<script type="text/javascript" src="static/js/echarts-all.js"></script>
+<script type="text/javascript" src="static/js/chart_analize.js"></script>
+{% endblock %} {% block content %}
+<div class="container">
+    <div class="row">
+        <h1>图表分析页面</h1>
+        <hr>
+        <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-5">
+                <!-- Split button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default">期刊数量（5）</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <!-- Split button -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default">图表类型（饼图）</button>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 col-md-offset-1">
+            <div id="main" style="margin-top: 80px;width: 600px; height: 500px;">
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

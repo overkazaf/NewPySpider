@@ -13,13 +13,13 @@ body {
 }
 
 .percent {
-	margin-top: 120px;
+	margin-top: 80px;
 }
 .circle {
 	width: 160px;
 	height: 160px;
 	padding: 10px;
-	margin: 20px auto;
+	margin: 0 auto;
 	font-size: 56px;
 	text-align: center;
 	line-height: 130px;
@@ -31,4 +31,10 @@ body {
 	-moz-box-sizing: border-box;
 	-ms-box-sizing: border-box;
 	-o-box-sizing: border-box;
+}
+
+.info {
+	margin-top: 60px;
+	text-align: center;
+	font-size: 16px;
 }
