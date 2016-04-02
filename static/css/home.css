@@ -1,10 +1,5 @@
 @charset utf-8;
-body {
-	background: #eeeeff;
-}
-
 .entry {
-	margin-top: 50px;
 	margin-bottom: 50px;
 }
 

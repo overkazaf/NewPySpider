@@ -5,6 +5,7 @@
 
 __author__ = 'XSunny'
 __modifiedBy__ = 'overkazaf'
+__resource__ = 'static'
 
 #爬虫模块
 import urllib2, urllib, fileUtil, httpClient, Parser, os
@@ -17,7 +18,6 @@ _default_parms  = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit
 
 
 #获得某个期数的所有音乐
-
 def getMusic(volNumber):
 	#如果出现异常，则退出循环
 	goon = 1
@@ -142,4 +142,6 @@ def test(volNumber):
 	return getThanks(srcurl) 
 	#print html 
 
-#test(704)
+for i in range(700, 704):
+	pass
+	#test(i)

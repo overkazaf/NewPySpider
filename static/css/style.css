@@ -1,18 +1,43 @@
 @charset utf-8;
-.result {
-	margin-top: 30px;
-}
 
 .result .well{
 	margin-top: -2px;
 	background: #ffffff;
 }
 
-.thumbnail img{
-	height: 160px;
+.well .thumbnail img{
+	height: 50px;
+	width: 50px;
 	overflow: hidden;
 }
 
-body {
-	background: #444444;
+.media-list-item {
+	float: left;
+	margin-left: 10px;
+	margin-bottom: 5px;
+	width: 50px;
+	height: 50px;
+}
+
+
+.mp3-item {
+	height: 80px;
+	text-align: center;
+	font-size: 32px;
+	font-weight: bold;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.well .thumbnail {
+	height: 240px;
+	overflow-y: auto; 
+}
+
+.modal-body .thumbnail{
+	height: 200px;
+}
+
+.modal-body .thumbnail img {
+	height: 100%;
 }

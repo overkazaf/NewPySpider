@@ -14,10 +14,11 @@ def home():
 
 @app.route('/showResult')
 def showResult():
-	resources = Controller.getLocalResources()
-	mp3s = resources['mp3s']
-	pics = resources['pics']
-	return render_template('listResultWithTab.html', mp3s=mp3s[1:20], pics=pics[1:20])
+	res = Controller.getLocalResources()
+	volumns = Controller.getVolumnList()
+	mp3s = res['mp3']
+	pics = res['pic']
+	return render_template('listResultWithTab.html', mp3s = mp3s[0:8], pics = pics[0:8], volumns=volumns)
 
 @app.route('/showChart')
 def showChart():
