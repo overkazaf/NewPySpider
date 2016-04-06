@@ -85,7 +85,7 @@ $(function () {
 
 
 	function mp3Tpl () {
-		var tpl = '<div class="col-xs-6 col-md-3">\
+		var tpl = '<div class="col-xs-6 col-md-4">\
 	                    <div class="mp3-item">\
 	                    	<span class="glyphicon glyphicon-music"></span>\
 							<a href="{{HREF}}" target="blank">{{TITLE}}</a>\
@@ -98,7 +98,7 @@ $(function () {
 
 
 	function picTpl () {
-		var tpl = '<div class="col-xs-6 col-md-4">\
+		var tpl = '<div class="col-xs-6 col-md-3">\
 	                    <a href="#" class="thumbnail">\
 							<img src="{{SRC}}"/>\
 	                    </a>\

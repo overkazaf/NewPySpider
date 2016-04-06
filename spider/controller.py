@@ -1,4 +1,5 @@
 import os
+import spider as Spider
 
 ' controller module '
 
@@ -11,6 +12,14 @@ def isExcludeFiles(ext):
 		if ext == fileExt:
 			return True
 	return False
+
+def filterPath (dirs):
+	list = []
+	for dir in dirs:
+		if dir == 'css' or dir == 'js':
+			continue
+		list.append(dir)
+	return list
 
 def getVolumnList():
 	list = []
@@ -54,6 +63,7 @@ def getDownloadedMusicList ():
 #get all the downloaded resources for local folder
 def getLocalResources ():
 	dirs = os.listdir(__resource__)
+	dirs = filterPath(dirs)
 	mp3, pic = [],[]
 	dict = {'mp3':[], 'pic':[]}
 	for dir in dirs:
@@ -67,9 +77,6 @@ def getLocalResources ():
 			continue
 			
 		if isExcludeFiles(file_extension) :
-			continue
-
-		if dir == 'css' or dir == 'js':
 			continue
 
 		mp3 = os.listdir(mp3Path)
@@ -86,3 +93,47 @@ def getLocalResources ():
 		dict['mp3'].append(ret1)
 		dict['pic'].append(ret2)
 	return dict
+
+#get current range of the downloaded volumns
+def getVolRange ():
+	minVol = 0
+	maxVol = 0
+	dirs = os.listdir(__resource__)
+	dirs = filterPath(dirs)
+
+	#sort by the volumn
+	dirs.sort(lambda x,y: cmp(x.split('.')[1], y.split('.')[1]))
+
+	minVol = dirs[0].split('.')[1]
+	maxVol = dirs[-1].split('.')[1]
+
+	print 'minVol ', minVol, ' maxVol ', maxVol
+
+	return {'min': minVol, 'max': maxVol}
+
+
+def runScheduler(type, interval, start, end):
+	tasks = []
+
+	if type == 'mp3':
+		pass
+	elif type == 'pic':
+		pass
+	elif type == 'all':
+		pass
+
+	Spider.getPicByRange(start, end)
+
+
+def startScheduler(type, interval, rangeType, start, end):
+	volRange = getVolRange()
+	minVol = volRange['min']
+	maxVol = volRange['max']
+	if rangeType == 'normal':
+		runScheduler(type, interval, start, end)
+	elif rangeType == 'forward':
+		runScheduler(type, interval, maxVol + 1, maxVol + end)
+	elif rangeType == 'backward':
+		runScheduler(type, interval, minVol - start, minVol - 1)
+
+	return True

@@ -16,9 +16,24 @@ import threading
 _default_parms  = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36", "Referer":"http://www.luoo.net/"}
 
 
+def getVolumnList():
+	list = []
+	dirs = os.listdir(__resource__)
+	print 'dirs ', dirs
+	for dir in dirs:
+		if dir == 'css' or dir == 'js':
+			continue
+		
+		list.append(dir)
+	return {"volumns" : list.sort()}
+
 
 #获得某个期数的所有音乐
 def getMusic(volNumber):
+
+	#初始化目录
+	initdir(volNumber)
+
 	#如果出现异常，则退出循环
 	goon = 1
 	mnumber = 1
@@ -54,8 +69,9 @@ def getMusic(volNumber):
 			pass
 		
 #获得某个期数的所有感谢数 -import 
-def getThanks(url):
+def getThanks(volNumber):
 	value = ''
+	url = 'http://www.luoo.net/music/'+str(volNumber)
 	try:
 		data = httpClient.crawlerResource(url, "GET", None)
 		value = Parser.getElementText(data, "#openList")
@@ -67,17 +83,36 @@ def getThanks(url):
 		pass
 	return value
 
+
+def getPicByRange (start, end):
+	start = int(start)
+	end = int(end)
+	for vol in range(start, end+1):
+		print 'calling getPic(', vol, ')'
+		getPic(vol)
+
+
+def getMusicByRange (start, end):
+	start = int(start)
+	end = int(end)
+	for mp3 in range(start, end+1):
+		getMusic(mp3)
+
 #获得某个期数的所有专辑图片
-def getPic(url, volNumber):
+def getPic(volNumber):
+	#初始化目录
+	initdir(volNumber)
+
+	url = 'http://www.luoo.net/music/'+str(volNumber)
 	pics = []
 	tasks = []
+
 	try:
 		data = httpClient.crawlerResource(url, "GET", None)
 		imgs = Parser.getElements(data, "li.track-item", "a[data-img]")
 		title = Parser.getElementText(data, "span.vol-title").strip()
 
 		print 'Album title:', title
-
 
 		print 'There are ', len(imgs), ' pictures need to be downloaded'
 		i = 1
@@ -120,11 +155,10 @@ def initdir(volNumber):
 
 #主页测试方法
 def test(volNumber):
-	srcurl ='http://www.luoo.net/music/'+str(volNumber)
 	initdir(volNumber)#在调用下面两个方法下载资源时必须使用
 	
 	def fn1():
-		getPic(srcurl, volNumber)
+		getPic(volNumber)
 
 	def fn2():
 		getMusic(volNumber)
@@ -139,7 +173,7 @@ def test(volNumber):
 	p2.start()
 	p2.join()
 
-	return getThanks(srcurl) 
+	return getThanks(volNumber) 
 	#print html 
 
 for i in range(700, 704):

@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, jsonify, render_template
 import spider.spider as Spider
 from flask.ext.bootstrap import Bootstrap
 import spider.controller as Controller
@@ -29,7 +29,25 @@ def spiderConfig():
 	#Spider.test(700)
 	return "Crawler Start!"
 
+@app.route('/crawler')
+def crawler():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+	print resType
+	print interval
+	print rangeType
+	print start, ' : ', end
 
+	status = Controller.startScheduler(resType, interval, rangeType, start, end)
+	result = False
+	message = 'Successful call scheduler'
+	if status : 
+		result = True
+		message = 'Failed to call scheduler'
+	return jsonify({'success': status, 'message': message})
 
 
 if __name__ == '__main__':

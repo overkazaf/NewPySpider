@@ -7,6 +7,12 @@
 	margin-bottom: 120px;
 }
 
+.dropdown-menu li input{
+	width: 40px;
+	text-indent: 4px;
+	color: #222;
+}
+
 .percent {
 	margin-top: 80px;
 }
