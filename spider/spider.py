@@ -12,6 +12,10 @@ import urllib2, urllib, fileUtil, httpClient, Parser, os
 
 from multiprocessing import Process
 import threading
+import Queue
+import re
+
+q = Queue.Queue()
 
 _default_parms  = {"User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36", "Referer":"http://www.luoo.net/"}
 
@@ -67,7 +71,30 @@ def getMusic(volNumber):
 			pass
 		finally:
 			pass
-		
+
+
+SEPERATOR = '$$$$'
+
+def getThanksByVolumns (volumns):
+	dict = {}
+	for vol in volumns:
+		def t(vol):
+			print vol, ' in t()'
+			q.put(vol+ SEPERATOR + getThanks(vol))
+		task = threading.Thread(target = t, name=vol, args=(vol,))
+		task.start()
+		task.join()
+
+	target = []
+	while not q.empty():
+		target = q.get().split(SEPERATOR)
+		print 'target  ', target
+		dict[int(target[0])] = int(target[1])
+
+	print 'done...', target
+	return dict
+
+
 #获得某个期数的所有感谢数 -import 
 def getThanks(volNumber):
 	value = ''
@@ -75,6 +102,8 @@ def getThanks(volNumber):
 	try:
 		data = httpClient.crawlerResource(url, "GET", None)
 		value = Parser.getElementText(data, "#openList")
+		m = re.search("(\d)+", value)
+		value = m.group(1)
 	except Exception, e:
 		raise
 	else:

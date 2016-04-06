@@ -75,7 +75,6 @@ $(function() {
     				Entity.setStart(ranges[1]);
     				break;
     			default:
-    			alert($('#'+ranges[0]).val() + '::' + $('#'+ranges[1]).val());
     				Entity.setRangeType('normal');
     				Entity.setStart($('#'+ranges[0]).val());
     				Entity.setEnd($('#'+ranges[1]).val());

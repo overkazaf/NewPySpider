@@ -1,4 +1,12 @@
 $(function () {
+	var host = 'http://127.0.0.1';
+    var port = 5000;
+    var prefix = host + ':' + port + '/';
+
+    var getThanksInterface = 'thanks';
+    var getThanksUrl = prefix + getThanksInterface;
+
+
 	var myChart = echarts.init(document.getElementById('main'));
 
         var option = {
@@ -70,4 +78,19 @@ $(function () {
         };
 
         myChart.setOption(option);
+
+
+
+
+        testGetDict();
+
+
+        function testGetDict() {
+        	var data = {
+        		'data' : "700,701" 
+        	}
+        	$.getJSON(getThanksUrl, data, function (ret) {
+        		console.log(ret);
+        	});
+        }
 });

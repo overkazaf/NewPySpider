@@ -112,28 +112,36 @@ def getVolRange ():
 	return {'min': minVol, 'max': maxVol}
 
 
-def runScheduler(type, interval, start, end):
+def runScheduler(type, start, end):
 	tasks = []
 
+	print 'start at ', str(start), ' end at ', end
 	if type == 'mp3':
-		pass
+		Spider.getMusicByRange(start, end)
 	elif type == 'pic':
-		pass
+		Spider.getPicByRange(start, end)
 	elif type == 'all':
-		pass
+		Spider.getPicByRange(start, end)
+		Spider.getMusicByRange(start, end)
 
-	Spider.getPicByRange(start, end)
-
-
-def startScheduler(type, interval, rangeType, start, end):
+	
+def startScheduler(type, rangeType, start, end):
 	volRange = getVolRange()
-	minVol = volRange['min']
-	maxVol = volRange['max']
+	minVol = int(volRange['min'])
+	maxVol = int(volRange['max'])
+	start = int(start)
+	end = int(end)
+
 	if rangeType == 'normal':
-		runScheduler(type, interval, start, end)
+		runScheduler(type, start, end)
 	elif rangeType == 'forward':
-		runScheduler(type, interval, maxVol + 1, maxVol + end)
+		runScheduler(type, maxVol + 1, maxVol + end)
 	elif rangeType == 'backward':
-		runScheduler(type, interval, minVol - start, minVol - 1)
+		runScheduler(type, minVol - start, minVol - 1)
 
 	return True
+
+
+
+def getThanksDict (list):
+	return Spider.getThanksByVolumns(list)
