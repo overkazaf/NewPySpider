@@ -15,6 +15,15 @@ $(function() {
     	}
     };
 
+    $('.dropdown-menu').on('click', 'li', function (ev) {
+    	var $target = $(ev.currentTarget);
+    	var $container = $target.closest('.btn-group');
+    	$target.addClass('active').siblings().removeClass('active');
+    	var chartType = $target.text();
+
+    	$container.find('.chart-type').text(chartType);
+
+    });
 
     $('.dropdown-range').on('click', 'li', function(ev) {
         var $target = $(ev.currentTarget);
@@ -68,7 +77,11 @@ $(function() {
     		} else {
     			var values = $inputs.val();
     			var SEPERATOR = values.indexOf(',') >= 0 ? ',' : ' ';
-    			ranges = values.split(SEPERATOR);
+    			var temp = values.split(SEPERATOR);
+    			for (var i = 0, l = temp.length; i < l; i++) {
+    				ranges.push(parseInt(temp[i]));
+    			}
+
     		}
 
 
@@ -153,15 +166,19 @@ $(function() {
     }
 
     function requestChartData (list, chartType, callback) {
-        var data = {
-            'data': list.join(',')
-        };
+        if (list.length == 0) {
+        	callback({});
+        } else {
+        	var data = {
+	            'data': list.join(',')
+	        };
 
-        $.getJSON(getThanksUrl, data, function(ret) {
-			if (ret.success === true || ret.success === 'true') {
-				callback && callback(ret.data);
-			}
-        });
+	        $.getJSON(getThanksUrl, data, function(ret) {
+				if (ret.success === true || ret.success === 'true') {
+					callback(ret.data);
+				}
+	        });
+        }
     }
 
     function setLoadingGif (containerId) {
@@ -169,8 +186,8 @@ $(function() {
     		src : GIF_PATH,
     		width: '100%',
     		height: '100%'
-    	}).hide();
-    	$('#' + containerId).empty().html($gif);
+    	});
+    	$('#' + containerId).html('<h2>Waiting</h2>').html($gif);
     	$gif.on('load', function () {
     		$(this).fadeIn('slow');
     	});
@@ -200,6 +217,7 @@ $(function() {
 
     		// 2. compose data
     		var mergedData = mergeChartData(clonedList, data);
+    		console.log('mergedData', mergedData);
 
     		// 3. buildChart
     		var template;
@@ -208,9 +226,9 @@ $(function() {
     		}
 
     		template = ccd[chartType];
-
+            console.log('template', template);
     		setTimeout(function () {
-    			template.buildChart(data);
+    			template.buildChart(mergedData);
     			ready = true;
     		}, 2000);
     		
@@ -278,7 +296,7 @@ $(function() {
 	                }
 	            },
 	            series: [{
-	                name: '访问来源',
+	                name: '数据来源',
 	                type: 'pie',
 	                radius: '55%',
 	                center: ['50%', '60%'],
@@ -293,8 +311,93 @@ $(function() {
 	            }]
 	        };
 	        return option;
+    	},
+    	'bar' : function (ret) {
+    		var legendData = [];
+	    	var seriesData = [];
+
+	    	for (var vol in ret) {
+	    		var name = '期刊' + vol;
+	    		var value = ret[vol];
+	    		legendData.push(name);
+	    		seriesData.push({
+	    			name : name,
+	    			value : value
+	    		});
+	    	}
+
+
+    		var option = {
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{a} <br/>{b} : {c} ({d}%)"
+			    },
+			    legend: {
+			        orient : 'vertical',
+			        x : 'left',
+			        data:legendData
+			    },
+			    toolbox: {
+			        show : true,
+			        feature : {
+			            mark : {show: true},
+			            dataView : {show: true, readOnly: false},
+			            magicType : {
+			                show: true, 
+			                type: ['pie', 'funnel'],
+			                option: {
+			                    funnel: {
+			                        x: '25%',
+			                        width: '50%',
+			                        funnelAlign: 'center',
+			                        max: 1548
+			                    }
+			                }
+			            },
+			            restore : {show: true},
+			            saveAsImage : {show: true}
+			        }
+			    },
+			    calculable : true,
+			    series : [
+			        {
+			            name:'点赞数统计',
+			            type:'pie',
+			            radius : ['50%', '70%'],
+			            itemStyle : {
+			                normal : {
+			                    label : {
+			                        show : false
+			                    },
+			                    labelLine : {
+			                        show : false
+			                    }
+			                },
+			                emphasis : {
+			                    label : {
+			                        show : true,
+			                        position : 'center',
+			                        textStyle : {
+			                            fontSize : '30',
+			                            fontWeight : 'bold'
+			                        }
+			                    }
+			                }
+			            },
+			            data:seriesData
+			        }
+			    ]
+			};
+			                    
+			                    
     	}
     };
+
+    function domTpl () {
+    	var tpl = '<div id="main" style="margin-top: 80px;width: 600px; height: 500px;"></div>';
+
+            return tpl;
+    }
 
     /**
      * [ChartTemplate 生成图的模板]
@@ -313,12 +416,15 @@ $(function() {
 		},
 		setOption : function (option) {
 			var dom = document.getElementById(this.containerId);
+			var that = this;
+			$(dom).replaceWith(domTpl());
 
-			dom.innerHTML = '';
-			var myChart = this.getChartInstance() || echarts.init(dom);
-        	myChart.setOption(option);
+			setTimeout(function () {
+				var myChart = echarts.init(document.getElementById(that.containerId));
+        		myChart.setOption(option);
 
-        	this.setChartInstance(myChart);
+        		that.setChartInstance(myChart);
+			}, 500);
 		},
 		buildChart : function (data) {
 			var option = this.constructOption(data);

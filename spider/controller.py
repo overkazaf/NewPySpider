@@ -103,9 +103,12 @@ def getVolRange ():
 
 	#sort by the volumn
 	dirs.sort(lambda x,y: cmp(x.split('.')[1], y.split('.')[1]))
-
-	minVol = dirs[0].split('.')[1]
-	maxVol = dirs[-1].split('.')[1]
+	if len(dirs) != 0:
+		minVol = dirs[0].split('.')[1]
+		maxVol = dirs[-1].split('.')[1]
+	else:
+		minVol = 100
+		maxVol = 100
 
 	print 'minVol ', minVol, ' maxVol ', maxVol
 
@@ -115,7 +118,7 @@ def getVolRange ():
 def runScheduler(type, start, end):
 	tasks = []
 
-	print 'start at ', str(start), ' end at ', end
+	print 'starts at ', str(start), ' and ends at ', end
 	if type == 'mp3':
 		Spider.getMusicByRange(start, end)
 	elif type == 'pic':

@@ -15,6 +15,8 @@ __author__ = 'overkazaf'
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
+MAX_RES_COUNT = 16
+
 
 def NoneFn():
 	pass
@@ -25,7 +27,7 @@ def timming_exe(fn = NoneFn, inc = 60):
 	
 	fn()
 
-	scheduler.event = schedule.enter(inc, 0, timming_exe, (fn, inc)) 
+	schedule.event = schedule.enter(inc, 0, timming_exe, (fn, inc)) 
 
 	schedule.run() 
 
@@ -40,7 +42,7 @@ def showResult():
 	volumns = Controller.getVolumnList()
 	mp3s = res['mp3']
 	pics = res['pic']
-	return render_template('listResultWithTab.html', mp3s = mp3s[0:8], pics = pics[0:8], volumns=volumns)
+	return render_template('listResultWithTab.html', mp3s = mp3s[0:MAX_RES_COUNT], pics = pics[0:MAX_RES_COUNT], volumns=volumns)
 
 @app.route('/showChart')
 def showChart():
@@ -68,7 +70,7 @@ def crawler():
 		Controller.startScheduler(resType, rangeType, start, end)
 
 	if schedule.event:
-		schedule.cancel(scheduler.event)
+		schedule.cancel(schedule.event)
 		print 'cancel last event in scheduler'
 
 
