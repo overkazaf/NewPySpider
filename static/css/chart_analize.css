@@ -1,0 +1,10 @@
+@charset utf-8;
+
+.inp_sep {
+	width: 156px !important;
+}
+
+.dropdown-menu li input {
+	width: 84px;
+	color: #000000;
+}

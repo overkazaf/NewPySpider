@@ -2,44 +2,55 @@
 <script type="text/javascript" src="static/js/echarts-all.js"></script>
 <script type="text/javascript" src="static/js/chart_analize.js"></script>
 {% endblock %} {% block content %}
+<link rel="stylesheet" href="static/css/chart_analize.css">
 <div class="container">
     <div class="row">
         <h1>图表分析页面</h1>
         <hr>
         <div class="col-md-10 col-md-offset-1">
-            <div class="col-md-5">
+            <div class="col-md-4">
+                <!-- Split button -->
+
+                <ul class="nav navbar-nav" data-type="range">
+                    <li class="dropdown">
+                        期刊范围：
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span>期刊选择</span>
+                            <strong class="caret"></strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-range" id="chartRange">
+                            <li>
+                            <a href="#">挑选期刊 <input type="text" class="inp_sep" placeholder="以英文逗号或空格分隔"></a>
+                        </li>
+                        <li><a href="#">
+                            <input id="volFrom" maxlength="4" type="text" value="" placeholder="开始"> 期
+                            到 <input id="volTo" maxlength="4" type="text" value="" placeholder="结束"> 期
+                        </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-4">
                 <!-- Split button -->
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default">期刊数量（5）</button>
+                    <button type="button" class="btn btn-default">图表类型（默认饼图）</button>
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="caret"></span>
                         <span class="sr-only">Toggle Dropdown</span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                    <ul class="dropdown-menu" id="chartType">
+                        <li data-type="pie"><a href="#">饼图</a></li>
+                        <li data-type="pie"><a href="#">坏图</a></li>
+                        <li data-type="pie"><a href="#">条形图</a></li>
+                        <li data-type="pie"><a href="#">柱状图</a></li>
+                        <li data-type="pie"><a href="#">折线图</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="col-md-5">
-                <!-- Split button -->
-                <div class="btn-group">
-                    <button type="button" class="btn btn-default">图表类型（饼图）</button>
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
-                    </ul>
-                </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" id="genChart">
+                    生成图表
+                </button>
             </div>
         </div>
         <div class="col-md-10 col-md-offset-1">
