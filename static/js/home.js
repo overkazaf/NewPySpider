@@ -6,27 +6,88 @@ $(function() {
     var showChartInterface = 'showChart';
     var showResultUrl = 'showResult';
     var crawlerUrl = 'crawler';
+    var musicCountInterface = 'musicCount';
+    var musicDoneInterface = 'musicDone';
+
     var showChartUrl = prefix + showChartInterface;
     var showResultUrl = prefix + showResultUrl;
     var doCrawlerUrl = prefix + crawlerUrl;
+    var musicCountUrl = prefix + musicCountInterface;
+    var musicDoneUrl = prefix + musicDoneInterface;
 
+    var testUrl = prefix + 'test'
+
+
+    var TOTAL, interval;
     $('#startCrawl').on('click', function() {
         if (!validateCrawlParam()) {
         	alert('请检查参数');
         	return;
         }
-
-
         var crawlerParam = getParamEntity();
-        $.getJSON(crawlerUrl, {
+        
+        var updateStatus = function (result) {
+        	var total;
+    		var done;
+    		var mp3t;
+    		var mp3d;
+    		var percentMp3
+
+    		if (result.total) {
+    			total = result.total;
+	    		done = result.done;
+	    		mp3t = total['mp3'];
+	    		mp3d = done['mp3'];
+    		} else {
+    			mp3t = TOTAL['mp3'];
+    			mp3d = result['done']['mp3'];
+    		}
+
+    		percentMp3 = parseFloat(mp3d / mp3t) * 100;
+
+    		if (percentMp3 > 100) {
+    			percentMp3 = 100;
+    		}
+
+    		console.log('percentMp3', percentMp3);
+    		$('#percentage').text(percentMp3);
+    		$('#label-label-info').text('正在进行爬虫任务，请耐心等待...');
+
+    		if (percentMp3 == 100) {
+    			clearInterval(interval);
+    			$('#label-label-info').text('已经完成本次抓取任务!');
+    		}
+        };
+
+        $.getJSON(testUrl, {
             type : crawlerParam.type,
             interval : crawlerParam.interval,
             rangeType : crawlerParam.rangeType,
             start : crawlerParam.start,
             end : crawlerParam.end,
         }, function(result) {
-            console.log('result', result);
+        	console.log('result', result);
+        	if (result.success == 'true' || result.success == true) {
+        		TOTAL = result.total;
+        		updateStatus(result);
+        	}
         });
+
+        interval = setInterval(function () {
+        	$.getJSON(musicDoneUrl, {
+	            type : crawlerParam.type,
+	            interval : crawlerParam.interval,
+	            rangeType : crawlerParam.rangeType,
+	            start : crawlerParam.start,
+	            end : crawlerParam.end,
+	        }, function(result) {
+	        	if (result.success == 'true' || result.success == true) {
+	        		updateStatus(result);
+	        	}
+	        });
+
+        }, 10000);
+
     });
 
     $('#showResult').on('click', function() {
@@ -36,6 +97,8 @@ $(function() {
     $('#showChart').on('click', function() {
         window.open(showChartUrl)
     });
+
+
 
 
 

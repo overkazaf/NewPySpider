@@ -127,13 +127,64 @@ def runScheduler(type, start, end):
 		Spider.getPicByRange(start, end)
 		Spider.getMusicByRange(start, end)
 
+
+def getDoneFiles(type, rangeType, start, end):
+	start = int(start)
+	end = int(end)
+	mdc = 0
+	for vol in range(start, end+1):
+
+		md = getMp3FilesByVol(start)
+		mdc = mdc + int(md)
+	return {'mp3', mdc}
+
+
+def getMp3FilesByVol(vol):
+	path = 'static/vol.' + str(vol) + '/mp3/'
+
+	if not os.path.exists(path):
+		os.makedirs(path)
+
+	files = os.listdir(path)
+	print 'files ', files
+	list = []
+	for file in files:
+		if file[-3:] == 'mp3':
+			list.append(file)
+	return len(list)
+
 	
+def getTaskCompletion(type, rangeType, start, end):
+	mc = 0
+	mdc = 0
+	pc = 0
+	percent = 0.5
+	start = int(start)
+	end = int(end)
+
+	for vol in range(start, end+1):
+
+		m = Spider.getMaxMusicCount(vol)
+		mc = mc + int(m)
+
+		md = getMp3FilesByVol(start)
+		mdc = mdc + int(md)
+		# p = Spider.getMaxPictureCount(vol)
+		# pc = pc + int(p)
+
+
+	return {'total':mc, 'done':mdc}
+
+
 def startScheduler(type, rangeType, start, end):
 	volRange = getVolRange()
 	minVol = int(volRange['min'])
 	maxVol = int(volRange['max'])
 	start = int(start)
 	end = int(end)
+
+	tasks = getTaskCompletion(type, rangeType, start, end)
+	print 'total tasks:', tasks
 
 	if rangeType == 'normal':
 		runScheduler(type, start, end)
@@ -143,7 +194,6 @@ def startScheduler(type, rangeType, start, end):
 		runScheduler(type, minVol - start, minVol - 1)
 
 	return True
-
 
 
 def getThanksDict (list):

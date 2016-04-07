@@ -53,6 +53,44 @@ def spiderConfig():
 	#Spider.test(700)
 	return "Crawler Start!"
 
+@app.route('/musicCount')
+def musicCount():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+
+	print 'mp3 Counting starts'
+	mp3Dict = Controller.getTaskCompletion(resType, rangeType, start, end)
+	print 'mp3 Counting ends ', mp3Dict
+	return jsonify({'success': True, 'message': 'success', 'total' : {'mp3':mp3Dict['total']}, 'done' : {'mp3':mp3Dict['done']}})
+
+@app.route('/musicDone')
+def musicDone():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+
+	print 'mp3 Counting starts'
+	mp3Dict = Controller.getDoneFiles(resType, rangeType, start, end)
+	print 'mp3 Counting ends ', mp3Dict
+	return jsonify({'done' : {'mp3': mp3Dict['mp3']}})
+
+
+
+@app.route('/test')
+def getTaskCompletion():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+
+	return Controller.getTaskCompletion(resType, rangeType, start, end)
+
 @app.route('/crawler')
 def crawler():
 	resType = request.args.get('type')
@@ -78,12 +116,12 @@ def crawler():
 	timming_exe(intervalFn, int(interval))
 
 	status = True
-	result = False
 	message = 'Successful call scheduler'
-	if status : 
-		result = True
-		message = 'Failed to call scheduler'
-	return jsonify({'success': status, 'message': message})
+	
+	print '#retrun at crawler'
+
+	return jsonify({'success': status, 'message': message, 'total' : 100})
+	#return jsonify({'success': status, 'message': message, 'total' : {'mp3':Spider.getMaxMusicCount(resType, rangeType, start, end)}, 'done':{'mp3': Controller.getDoneFiles(resType, rangeType, start, end)['mp3']}})
 
 
 @app.route('/thanks')

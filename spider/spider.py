@@ -14,6 +14,7 @@ from multiprocessing import Process
 import threading
 import Queue
 import re
+import urllib2
 
 q = Queue.Queue()
 
@@ -32,6 +33,41 @@ def getVolumnList():
 	return {"volumns" : list.sort()}
 
 
+
+def getMaxMusicCount(volNumber):
+	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
+	surl = ''
+	goon = 1
+	mnumber = 1
+	totalMusiCount = 0
+
+	while (goon):
+		try:
+			if mnumber < 10:
+				surl = prefix + str(volNumber)+"/0"+str(mnumber)+".mp3"
+			else:
+				surl = prefix + str(volNumber)+"/"+str(mnumber)+".mp3"
+
+			ret = urllib2.urlopen(surl)
+			if ret.code == 200:
+				totalMusiCount = totalMusiCount + 1
+			else:
+				goon = 0
+				try:
+					ret.close()
+				except NameError:
+					pass
+
+			mnumber = mnumber + 1
+		except Exception, e:
+			print e
+			goon = 0
+		else:
+			pass
+		finally:
+			print 'totalMusiCount, ', totalMusiCount
+	return totalMusiCount
+
 #获得某个期数的所有音乐
 def getMusic(volNumber):
 
@@ -43,6 +79,10 @@ def getMusic(volNumber):
 	mnumber = 1
 	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
 	tasks = []
+
+	#total = getMaxMusicCount(volNumber)
+	#print volNumber, ' has total ', total, ' mp3 files'
+
 	while (goon):
 		try:
 			surl = ''
@@ -73,8 +113,8 @@ def getMusic(volNumber):
 			pass
 
 
-SEPERATOR = '$$$$'
 
+SEPERATOR = '$$$$'
 def getThanksByVolumns (volumns):
 	dict = {}
 	for vol in volumns:
