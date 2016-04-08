@@ -16,6 +16,7 @@ def saveByteFile(fileName, data):
 		if not os.path.isfile(fileName):
 			f = open(fileName, "wb")
 			f.write(data)
+			print fileName, ' saved'
 	except IOError, e:
 		print "FileIO ERROR!"
 	finally:

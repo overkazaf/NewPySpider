@@ -1,5 +1,9 @@
 @charset utf-8;
 
+.condition {
+	margin-bottom: 50px;
+}
+
 .result .well{
 	margin-top: -2px;
 	background: #ffffff;
@@ -30,7 +34,7 @@
 }
 
 .well .thumbnail {
-	height: 240px;
+	height: 220px;
 	overflow-y: auto; 
 }
 

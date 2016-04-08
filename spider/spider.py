@@ -15,6 +15,7 @@ import threading
 import Queue
 import re
 import urllib2
+import time
 
 q = Queue.Queue()
 
@@ -34,7 +35,26 @@ def getVolumnList():
 
 
 
+def getMaxPictureCount(volNumber):
+	initdir(volNumber)
+	url = 'http://www.luoo.net/music/'+str(volNumber)
+	
+	imgs = []
+	try:
+		data = httpClient.crawlerResource(url, "GET", None)
+		imgs = Parser.getElements(data, "li.track-item", "a[data-img]")
+
+	except Exception, e:
+		raise
+	else:
+		pass
+	finally:
+		pass
+	return len(imgs)
+
 def getMaxMusicCount(volNumber):
+	initdir(volNumber)
+	
 	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
 	surl = ''
 	goon = 1
@@ -65,7 +85,7 @@ def getMaxMusicCount(volNumber):
 		else:
 			pass
 		finally:
-			print 'totalMusiCount, ', totalMusiCount
+			pass
 	return totalMusiCount
 
 #获得某个期数的所有音乐
@@ -96,12 +116,12 @@ def getMusic(volNumber):
 			filepath = "./static/vol."+str(volNumber)+"/mp3/"+str(mnumber)+".mp3"
 
 			def t():
-				fileUtil.saveByteFile(filepath, data)
+				if not os.path.exists(filepath):
+					fileUtil.saveByteFile(filepath, data)
 
 			t = threading.Thread(target = t)
 			t.start()
 			t.join()
-			print 'mp3 ', mnumber, ' has been written to the disk'
 
 			mnumber = mnumber+1
 		except Exception, e:
@@ -123,12 +143,10 @@ def getThanksByVolumns (volumns):
 			q.put(vol+ SEPERATOR + getThanks(vol))
 		task = threading.Thread(target = t, name=vol, args=(vol,))
 		task.start()
-		task.join()
 
 	target = []
 	while not q.empty():
 		target = q.get().split(SEPERATOR)
-		print 'target  ', target
 		dict[int(target[0])] = int(target[1])
 
 	print 'done...', target
@@ -192,13 +210,12 @@ def getPic(volNumber):
 			filepath = "./static/vol."+str(volNumber)+"/pic/"+str(i)+".jpg"
 
 			def t():
-				fileUtil.saveByteFile(filepath, pic)
+				if not os.path.exists(filepath):
+					fileUtil.saveByteFile(filepath, pic)
 
 			t = threading.Thread(target = t)
 
-			print 'image ', i, ' has been written to the disk'
 			t.start()
-			t.join()
 			i= i +1
 
 

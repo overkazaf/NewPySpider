@@ -2,8 +2,9 @@ from flask import Flask, request, jsonify, render_template
 import spider.spider as Spider
 from flask.ext.bootstrap import Bootstrap
 import spider.controller as Controller
-import time, os, sched 
+import time, os, sched, threading, thread, multiprocessing, math
 
+from multiprocessing import Pool  
 
 #global job scheduler
 schedule = sched.scheduler(time.time, time.sleep)
@@ -16,6 +17,7 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
 MAX_RES_COUNT = 16
+PAGE_SIZE = 8
 
 
 def NoneFn():
@@ -36,13 +38,69 @@ def timming_exe(fn = NoneFn, inc = 60):
 def home():
 	return render_template('home.html')
 
+@app.route('/test')
+def testFn():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+
+	print 'Inside test function'
+	return jsonify(Controller.getTaskCompletion(type, rangeType, start, end))
+
+
 @app.route('/showResult')
 def showResult():
-	res = Controller.getLocalResources()
-	volumns = Controller.getVolumnList()
+
+	pageNo = request.args.get('pageNo')
+	pageSize = request.args.get('pageSize')
+
+	pageNo = int(pageNo)
+	pageSize = int(pageSize)
+
+	if not pageSize:
+		pageSize = PAGE_SIZE
+
+	
+	total = Controller.getTotalFolderCounts()
+	print 'tttttt, ', total
+
+	totalPages = int(total / pageSize)
+
+	if totalPages * pageSize < total:
+		totalPages = totalPages + 1
+
+
+	if totalPages == 0:
+		totalPages = 1
+
+	if not pageNo:
+		pageNo = 1
+
+	if pageNo <= 0:
+		pageNo = 1
+
+	if pageNo >= totalPages:
+		pageNo = totalPages
+
+	res = Controller.getLocalResources(pageNo, pageSize)
+
 	mp3s = res['mp3']
 	pics = res['pic']
-	return render_template('listResultWithTab.html', mp3s = mp3s[0:MAX_RES_COUNT], pics = pics[0:MAX_RES_COUNT], volumns=volumns)
+
+	start = (pageNo - 1) * pageSize + 1
+	end = pageNo * pageSize
+	
+	if end <= start:
+		end = start + 1
+
+	if end >= total:
+		end = total
+	print 'start:', start-1, ' end:', end
+	print 'pics, ', pics
+
+	return render_template('listResultWithTab.html', mp3s = mp3s[start-1:end], pics = pics[start-1:end], total=total)
 
 @app.route('/showChart')
 def showChart():
@@ -61,10 +119,18 @@ def musicCount():
 	start = request.args.get('start')
 	end = request.args.get('end')
 
-	print 'mp3 Counting starts'
 	mp3Dict = Controller.getTaskCompletion(resType, rangeType, start, end)
-	print 'mp3 Counting ends ', mp3Dict
 	return jsonify({'success': True, 'message': 'success', 'total' : {'mp3':mp3Dict['total']}, 'done' : {'mp3':mp3Dict['done']}})
+
+@app.route('/taskCompletion')
+def taskCompletion():
+	resType = request.args.get('type')
+	interval = request.args.get('interval')
+	rangeType = request.args.get('rangeType')
+	start = request.args.get('start')
+	end = request.args.get('end')
+
+	return jsonify(Controller.getTaskCompletion(resType, rangeType, start, end))
 
 @app.route('/musicDone')
 def musicDone():
@@ -74,22 +140,15 @@ def musicDone():
 	start = request.args.get('start')
 	end = request.args.get('end')
 
-	print 'mp3 Counting starts'
-	mp3Dict = Controller.getDoneFiles(resType, rangeType, start, end)
-	print 'mp3 Counting ends ', mp3Dict
-	return jsonify({'done' : {'mp3': mp3Dict['mp3']}})
+	return jsonify({'done':Controller.getDoneFiles(resType, rangeType, start, end)});
 
 
+def timeoutFn(fn, resType, rangeType, start, end, interval):
+	def f():
+		fn(resType, rangeType, start, end)
+	timming_exe(f, int(interval))
 
-@app.route('/test')
-def getTaskCompletion():
-	resType = request.args.get('type')
-	interval = request.args.get('interval')
-	rangeType = request.args.get('rangeType')
-	start = request.args.get('start')
-	end = request.args.get('end')
 
-	return Controller.getTaskCompletion(resType, rangeType, start, end)
 
 @app.route('/crawler')
 def crawler():
@@ -98,30 +157,14 @@ def crawler():
 	rangeType = request.args.get('rangeType')
 	start = request.args.get('start')
 	end = request.args.get('end')
-	# print resType
-	# print interval
-	# print rangeType
-	# print start
-	# print end
-
-	def intervalFn ():
-		Controller.startScheduler(resType, rangeType, start, end)
 
 	if schedule.event:
 		schedule.cancel(schedule.event)
-		print 'cancel last event in scheduler'
 
-
-	# start scheduler at each interval
-	timming_exe(intervalFn, int(interval))
-
-	status = True
-	message = 'Successful call scheduler'
+	p = multiprocessing.Process(target = timeoutFn, args = (Controller.startScheduler, resType, rangeType, start, end, interval))
+	p.start()
 	
-	print '#retrun at crawler'
-
-	return jsonify({'success': status, 'message': message, 'total' : 100})
-	#return jsonify({'success': status, 'message': message, 'total' : {'mp3':Spider.getMaxMusicCount(resType, rangeType, start, end)}, 'done':{'mp3': Controller.getDoneFiles(resType, rangeType, start, end)['mp3']}})
+	return jsonify(Controller.getTaskCompletion(resType, rangeType, start, end))
 
 
 @app.route('/thanks')

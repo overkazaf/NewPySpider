@@ -16,7 +16,7 @@ def isExcludeFiles(ext):
 def filterPath (dirs):
 	list = []
 	for dir in dirs:
-		if dir == 'css' or dir == 'js':
+		if dir == 'css' or dir == 'js' or dir == '.DS_Store':
 			continue
 		list.append(dir)
 	return list
@@ -61,11 +61,15 @@ def getDownloadedMusicList ():
 	return None
 
 #get all the downloaded resources for local folder
-def getLocalResources ():
+def getLocalResources (pageNo, pageSize):
 	dirs = os.listdir(__resource__)
 	dirs = filterPath(dirs)
 	mp3, pic = [],[]
 	dict = {'mp3':[], 'pic':[]}
+
+	start = (pageNo-1)*pageSize + 1
+	end = pageNo * pageSize
+
 	for dir in dirs:
 		mp3Path = __resource__ + '/' + dir + '/mp3/'
 		picPath = __resource__ + '/' + dir + '/pic/'
@@ -94,6 +98,11 @@ def getLocalResources ():
 		dict['pic'].append(ret2)
 	return dict
 
+def getTotalFolderCounts ():
+	dirs = os.listdir(__resource__)
+	dirs = filterPath(dirs)
+	return len(dirs)
+
 #get current range of the downloaded volumns
 def getVolRange ():
 	minVol = 0
@@ -112,7 +121,7 @@ def getVolRange ():
 
 	print 'minVol ', minVol, ' maxVol ', maxVol
 
-	return {'min': minVol, 'max': maxVol}
+	return {'min': int(minVol), 'max': int(maxVol)}
 
 
 def runScheduler(type, start, end):
@@ -135,46 +144,105 @@ def getDoneFiles(type, rangeType, start, end):
 	for vol in range(start, end+1):
 
 		md = getMp3FilesByVol(start)
-		mdc = mdc + int(md)
-	return {'mp3', mdc}
+		mdc = int(mdc) + int(md)
+	return {'mp3': mdc}
+
 
 
 def getMp3FilesByVol(vol):
 	path = 'static/vol.' + str(vol) + '/mp3/'
 
-	if not os.path.exists(path):
-		os.makedirs(path)
+	files = os.listdir(path)
+
+	cnt = 0
+	for file in files:
+		if os.path.getsize(path + file) > 10:
+			cnt = cnt + 1
+	
+	return cnt
+
+
+def getPicFilesByVol(vol):
+	path = 'static/vol.' + str(vol) + '/pic/'
 
 	files = os.listdir(path)
-	print 'files ', files
-	list = []
+
+	cnt = 0
 	for file in files:
-		if file[-3:] == 'mp3':
-			list.append(file)
-	return len(list)
+		if os.path.getsize(path + file) > 10:
+			cnt = cnt + 1
+	
+	return cnt
 
 	
 def getTaskCompletion(type, rangeType, start, end):
-	mc = 0
-	mdc = 0
-	pc = 0
-	percent = 0.5
+	
+	print 'start collecting data'
+	range = getVolRange()
+
+	print 'range,', range
+	if rangeType == 'forward':
+		start = range['max']
+		end = int(start) + int(end) - 1
+
+	if rangeType == 'backward':
+		temp = range['min']
+		start = int(temp) - int(end)
+		end = int(temp) - 1
+
+		if start < 1:
+			start = 1
+		if end < 1:
+			end = 1
+
+
+	music = {'total':0,'done':0}
+	picture = {'total':0,'done':0}
+
+	if type == 'all' or type == 'mp3':
+		music = getMusicCompletion(type, rangeType, start, end)
+		print 'music data done'
+
+	if type == 'all' or type == 'pic':
+		picture = getPictureCompletion(type, rangeType, start, end)
+		print 'picture data done'
+
+	#print 'picture completion, ', picture['total'], ' ', picture.done
+	#print 'music completion, ', music['total'], ' ', music['done']
+	return {'total':{'mp3':music['total'], 'pic':picture['total']}, 'done':{'mp3': music['done'], 'pic': picture['done']}}
+
+
+def getPictureCompletion (type, rangeType, start, end):
 	start = int(start)
 	end = int(end)
+	pc = 0
+	pdc = 0
 
+	for vol in range(start, end+1):
+		p = Spider.getMaxPictureCount(vol)
+		pc = int(pc) + int(p)
+
+		pd = getPicFilesByVol(vol)
+		pdc = int(pdc) + int(pd)
+
+	return {'total':pc, 'done':pdc}
+
+def getMusicCompletion (type, rangeType, start, end):
+	start = int(start)
+	end = int(end)
+	mc = 0
+	mdc = 0
+
+	print 'in getMusicCompletionFn'
 	for vol in range(start, end+1):
 
 		m = Spider.getMaxMusicCount(vol)
-		mc = mc + int(m)
+		mc = int(mc) + int(m)
 
-		md = getMp3FilesByVol(start)
-		mdc = mdc + int(md)
-		# p = Spider.getMaxPictureCount(vol)
-		# pc = pc + int(p)
-
+		md = getMp3FilesByVol(vol)
+		mdc = int(mdc) + int(md)
 
 	return {'total':mc, 'done':mdc}
-
 
 def startScheduler(type, rangeType, start, end):
 	volRange = getVolRange()

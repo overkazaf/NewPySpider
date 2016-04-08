@@ -37,6 +37,7 @@
 		                </a>
 		                <ul class="dropdown-menu">
 		                    <li data-interval="30"><a href="#">30 s</a></li>
+		                    <li data-interval="60"><a href="#">1 min</a></li>
 		                    <li data-interval="1800"><a href="#">30 min</a></li>
 		                    <li data-interval="10800"><a href="#">3 h</a></li>
 		                    <li data-interval="43200"><a href="#">12 h</a></li>
@@ -58,8 +59,12 @@
 		                    <strong class="caret"></strong>
 		                </a>
 		                <ul class="dropdown-menu">
-		                    <li data-range="backward:5"><a href="#">往前5期</a></li>
-		                    <li data-range="foward:5"><a href="#">往后5期</a></li>
+		                    <!-- <li data-range="backward:5"><a href="#">往前5期</a></li> -->
+		                    <!-- <li data-range="forward:1"><a href="#">往后1期</a></li>
+		                    <li data-range="forward:2"><a href="#">往后2期</a></li>
+		                    <li data-range="forward:3"><a href="#">往后3期</a></li>
+		                    <li data-range="forward:4"><a href="#">往后4期</a></li>
+		                    <li data-range="forward:5"><a href="#">往后5期</a></li> -->
 		                    <li data-range="volFrom:volTo"><a href="#">
 								<input id="volFrom" maxlength="4" type="text" value="" placeholder="开始"> 期
 								到 <input id="volTo" maxlength="4" type="text" value="" placeholder="结束"> 期
@@ -76,7 +81,7 @@
 	    	<div class="col-md-4">
 	    		<div id="startCrawl" class="btn btn-primary btn-block btn-lg">
 					<i class="glyphicon glyphicon-ok"></i>
-	    		开始抓取</div>
+					<span id="crawlText">开始抓取</span></div>
 	    	</div>
 	    	<div class="col-md-4">
 	    		<div id="showResult" class="btn btn-warning btn-block btn-lg">

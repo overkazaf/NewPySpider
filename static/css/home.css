@@ -3,10 +3,6 @@
 	margin-bottom: 50px;
 }
 
-.conditions {
-	margin-bottom: 120px;
-}
-
 .dropdown-menu li input{
 	width: 100px;
 	text-indent: 4px;
@@ -21,9 +17,9 @@
 	height: 190px;
 	padding: 10px;
 	margin: 0 auto;
-	font-size: 56px;
+	font-size: 48px;
 	text-align: center;
-	line-height: 145px;
+	line-height: 160px;
 	border-radius: 50%;
 	border: 5px solid #baff00;
 	box-shadow: 0 0 10px #000;

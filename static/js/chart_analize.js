@@ -90,7 +90,6 @@ $(function() {
     	getChartType : function () {
     		var $type = $('#chartType');
     		var chartType = $type.find('.active').attr('data-type');
-
     		return chartType || 'pie';
     	}
     }
@@ -113,7 +112,7 @@ $(function() {
     // 	demo.push(i);
     // }
     // 
-    var demo = [100, 200, 300, 400];
+    // var demo = [100, 200, 300, 400];
 
     //requestDataAndBuildChart(demo, 'pie');
 
@@ -266,7 +265,7 @@ $(function() {
 	            },
 	            tooltip: {
 	                trigger: 'item',
-	                formatter: "{a} <br/>{b} : {c} ({d}%)"
+	                formatter: "{a} <br/>{b} : {c} ({d}次)"
 	            },
 	            legend: {
 	                orient: 'vertical',
@@ -312,7 +311,135 @@ $(function() {
 	        };
 	        return option;
     	},
+    	'treemap' : function (ret) {
+    		var legendData = [];
+	    	var seriesData = [];
+
+	    	console.log('ret', ret);
+
+	    	for (var vol in ret) {
+	    		var name = '期刊' + vol;
+	    		var value = ret[vol];
+	    		legendData.push(name);
+	    		seriesData.push(clone({
+	    			name : name,
+	    			value : value
+	    		}));
+	    	}
+
+
+    		var option = {
+			    title : {
+			        text: '落网期刊点赞数分析',
+			        subtext: '爬取数据'
+			    },
+			    tooltip : {
+			        trigger: 'item',
+			        formatter: "{b}: {c}"
+			    },
+			    toolbox: {
+			        show : true,
+			        feature : {
+			            mark : {show: true},
+			            dataView : {show: true, readOnly: false},
+			            restore : {show: true},
+			            saveAsImage : {show: true}
+			        }
+			    },
+			    calculable : false,
+			    series : [
+			        {
+			            name:'矩形图',
+			            type:'treemap',
+			            itemStyle: {
+			                normal: {
+			                    label: {
+			                        show: true,
+			                        formatter: "{b}"
+			                    },
+			                    borderWidth: 2
+			                },
+			                emphasis: {
+			                    label: {
+			                        show: true
+			                    }
+			                }
+			            },
+			            data:seriesData
+			        }
+			    ]
+			};
+
+			return option;                  
+    	},
     	'bar' : function (ret) {
+    		var legendData = [];
+	    	var seriesData = [];
+
+	    	for (var vol in ret) {
+	    		var name = '期刊' + vol;
+	    		var value = ret[vol];
+	    		legendData.push(name);
+	    		seriesData.push(value);
+	    	}
+
+
+    		var option = {
+			    title : {
+			        text: '落网期刊点赞数分析',
+			        subtext: '爬取数据'
+			    },
+			    tooltip : {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['点赞数']
+			    },
+			    toolbox: {
+			        show : true,
+			        feature : {
+			            mark : {show: true},
+			            dataView : {show: true, readOnly: false},
+			            magicType : {show: true, type: ['line', 'bar']},
+			            restore : {show: true},
+			            saveAsImage : {show: true}
+			        }
+			    },
+			    calculable : true,
+			    xAxis : [
+			        {
+			            type : 'category',
+			            data : legendData
+			        }
+			    ],
+			    yAxis : [
+			        {
+			            type : 'value'
+			        }
+			    ],
+			    series : [
+			        {
+			            name:'蒸发量',
+			            type:'bar',
+			            data:seriesData,
+			            markPoint : {
+			                data : [
+			                    {type : 'max', name: '最大值'},
+			                    {type : 'min', name: '最小值'}
+			                ]
+			            },
+			            markLine : {
+			                data : [
+			                    {type : 'average', name: '平均值'}
+			                ]
+			            }
+			        }
+			    ]
+			};
+			                    
+
+			return option;                  
+    	}, 'rose' : function (ret){
     		var legendData = [];
 	    	var seriesData = [];
 
@@ -325,16 +452,19 @@ $(function() {
 	    			value : value
 	    		});
 	    	}
-
-
     		var option = {
+			    title : {
+			        text: '南丁格尔玫瑰图',
+			        subtext: '纯属虚构',
+			        x:'center'
+			    },
 			    tooltip : {
 			        trigger: 'item',
-			        formatter: "{a} <br/>{b} : {c} ({d}%)"
+			        formatter: "{a} <br/>{b} : {c} ({d}次)"
 			    },
 			    legend: {
-			        orient : 'vertical',
-			        x : 'left',
+			        x : 'center',
+			        y : 'bottom',
 			        data:legendData
 			    },
 			    toolbox: {
@@ -344,15 +474,7 @@ $(function() {
 			            dataView : {show: true, readOnly: false},
 			            magicType : {
 			                show: true, 
-			                type: ['pie', 'funnel'],
-			                option: {
-			                    funnel: {
-			                        x: '25%',
-			                        width: '50%',
-			                        funnelAlign: 'center',
-			                        max: 1548
-			                    }
-			                }
+			                type: ['pie', 'funnel']
 			            },
 			            restore : {show: true},
 			            saveAsImage : {show: true}
@@ -361,9 +483,13 @@ $(function() {
 			    calculable : true,
 			    series : [
 			        {
-			            name:'点赞数统计',
+			            name:'半径模式',
 			            type:'pie',
-			            radius : ['50%', '70%'],
+			            radius : [20, 110],
+			            center : ['25%', 200],
+			            roseType : 'radius',
+			            width: '40%',       // for funnel
+			            max: 40,            // for funnel
 			            itemStyle : {
 			                normal : {
 			                    label : {
@@ -375,21 +501,30 @@ $(function() {
 			                },
 			                emphasis : {
 			                    label : {
-			                        show : true,
-			                        position : 'center',
-			                        textStyle : {
-			                            fontSize : '30',
-			                            fontWeight : 'bold'
-			                        }
+			                        show : true
+			                    },
+			                    labelLine : {
+			                        show : true
 			                    }
 			                }
 			            },
+			            data:seriesData
+			        },
+			        {
+			            name:'面积模式',
+			            type:'pie',
+			            radius : [30, 110],
+			            center : ['75%', 200],
+			            roseType : 'area',
+			            x: '50%',               // for funnel
+			            max: 40,                // for funnel
+			            sort : 'ascending',     // for funnel
 			            data:seriesData
 			        }
 			    ]
 			};
 			                    
-			                    
+    		return option;
     	}
     };
 
@@ -424,7 +559,7 @@ $(function() {
         		myChart.setOption(option);
 
         		that.setChartInstance(myChart);
-			}, 500);
+			}, 1500);
 		},
 		buildChart : function (data) {
 			var option = this.constructOption(data);

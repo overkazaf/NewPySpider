@@ -1,4 +1,7 @@
 $(function () {
+	var PAGE_SIZE = 8;
+
+
 	$('.nav').on('click', 'li', function () {
 		var index = $(this).index();
 		var $wells = $('.result-container').find('.well');
@@ -12,13 +15,58 @@ $(function () {
 		var src = $(this).attr('data-src');
 		var that = this;
 		setTimeout(function () {
-			$(that).attr({
+			$(that).hide().attr({
 				src : src
-			});
-		}, (index % 2) * 300 + 200);
+			}).fadeIn('slow');
+		}, index * 10 + 50);
 	});
 
-	//$('.dropdown-toggle').dropdown()
+
+	initPagination();
+	function pageBtnTpl () {
+		var tpl = '<li class="page-item"><a class="page-link" href="#">{{PAGENO}}</a></li>';
+		return tpl;
+	}
+
+	function initPagination() {
+		var $page = $('.pagination');
+		var total = parseInt($page.attr('data-total'));
+			totalPages = Math.ceil(total / PAGE_SIZE);
+			totalPages = Math.max(totalPages, 1);
+
+		var template = '';
+		for (var page = 1; page <= totalPages; page++) {
+			var tpl = pageBtnTpl();
+			tpl = tpl.replace('{{PAGENO}}', page);
+			template += tpl;
+		}
+
+		$page.html(template);
+
+		var pageNo = getQueryString('pageNo') || 1;
+		$page.find('.page-item').eq(pageNo-1).addClass('active');
+	}
+
+
+	function getQueryString(name) {  
+	    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
+	    var r = window.location.search.substr(1).match(reg);  //获取url中"?"符后的字符串并正则匹配
+	    var context = "";  
+	    if (r != null)  
+	         context = r[2];  
+	    reg = null;  
+	    r = null;  
+	    return context == null || context == "" || context == "undefined" ? "" : context;  
+	}
+
+
+
+	$('.pagination').on('click', '.page-item', function (){
+		var pageNo = parseInt($(this).text());
+		var pageSize = PAGE_SIZE;
+
+		window.location.href = 'http://127.0.0.1:5000/showResult?pageNo=' + pageNo +'&pageSize=' + pageSize;
+	});
 
 
 	$('.thumbnail').on('click', function (ev) {
