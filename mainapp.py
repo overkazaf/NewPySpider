@@ -150,6 +150,13 @@ def timeoutFn(fn, resType, rangeType, start, end, interval):
 
 
 
+@app.route('/cancelSchedule')
+def cancelSchedule():
+	if schedule.event:
+		schedule.cancel(schedule.event)
+		print 'cancel schedule'
+	return jsonify({'success':True, 'message': 'schedule canceled'})
+
 @app.route('/crawler')
 def crawler():
 	resType = request.args.get('type')
