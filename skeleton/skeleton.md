@@ -10,9 +10,10 @@
   +  listResultWithTab.html   列出所抓取的资料列表
   +  chart_analize.html     图表页面
 
+#Python 模块
 ##controller 控制器，用于控制模型与视图间的交互
 * mainapp.py   ----    路由模块， 用于转发请求
-  +  crawler         抓虫任务，将任务分发到另一个进程中去处理
+  +  crawler         抓虫任务，将任务分发到另一个进程中去处理, 使用multiprocessing模块处理
   +  showResult      显示爬取结果
   +  showChart       显示图表
   +  home            主页入口
@@ -61,3 +62,30 @@
   +  getPicByRange   获取给定范围内的图片
   +  getMaxPictureCount  获取当前任务需要下载的图片文件总数
   +  getMaxMusicCount  获取当前任务需要下载的mp3文件总数
+
+
+#js 模块
+##home  ----    home.html视图对应的入口模块
+*  home.js  ----    入口模块
+  +  paramEntity  ----    爬虫参数的实体类，方便配置项的管理
+  +  bindEvents   ----    按钮事件的绑定， 对下拉、开始/停止任务，页面转换等操作做统一处理
+  +  collectParam  ----    爬虫参数的收集策略，写入到当前应用的参数实体中，方便管理
+  +  validateCrawlParam  ----    校验爬虫参数
+  +  fnCrawlerTaskStart  ----    初始化爬虫任务的界面状态
+  +  fnCrawlerTaskDone  ----     完成爬虫任务后的界面状态
+
+##listResult  ----    资源展示模块
+*  listResult.js    --  入口模块
+  +  bindEvents  ----  绑定按钮事件
+  +  initPagination ---- 初始化分页的功能
+  +  buildList ---- 构建展示在页面的资源列表
+  +  showResultDetail  --  显示资源详情
+  +  pageBtnTpl，mp3Tpl，picTpl    ----  工具类
+
+##chart_analize  ----  图表分析模块
+*  chart_analize.js
+  +  ChartModel  --  图表模型类，用于根据不同的类型生成echarts
+  +  requestDataAndBuildChart  --  请求并构建图表
+  +  requestChartData  --  根据期刊列表请求点赞数  
+  +  constructChartOption  --  构建不同的图表参数
+  +  ChartTemplate  --  生成图的模板方法类

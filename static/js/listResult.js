@@ -1,13 +1,46 @@
 $(function () {
 	var PAGE_SIZE = 8;
 
+	function bindEvents(){
+		$('.nav').on('click', 'li', function () {
+			var index = $(this).index();
+			var $wells = $('.result-container').find('.well');
+			$(this).addClass('active').siblings().removeClass('active');
+			$wells.eq(index).show().siblings('.well').hide();
+		});
 
-	$('.nav').on('click', 'li', function () {
-		var index = $(this).index();
-		var $wells = $('.result-container').find('.well');
-		$(this).addClass('active').siblings().removeClass('active');
-		$wells.eq(index).show().siblings('.well').hide();
-	});
+		$('.pagination').on('click', '.page-item', function (){
+			var pageNo = parseInt($(this).text());
+			var pageSize = PAGE_SIZE;
+
+			window.location.href = 'http://127.0.0.1:5000/showResult?pageNo=' + pageNo +'&pageSize=' + pageSize;
+		});
+
+
+		$('.thumbnail').on('click', function (ev) {
+			var $ctx = $(this).closest('.well');
+			var type = $ctx.attr('data-type');
+			var volNo = $(this).find('h4').text();
+			var data = [];
+
+			switch(type){
+				case 'pic':
+					data = $(this).find('img').map(function () {
+						return $(this).attr('data-src');
+					});
+					break;
+				case 'mp3':
+					data = $(this).find('li').map(function () {
+						return $(this).text();
+					});
+					break;
+			}
+			console.log('data', data);
+			showResultDetail(volNo, type, $(this), data);
+		});
+	}
+	bindEvents();
+
 
 	$('.result-container').find('.well').last().hide();
 
@@ -19,14 +52,7 @@ $(function () {
 				src : src
 			}).fadeIn('slow');
 		}, index * 10 + 50);
-	});
-
-
-	initPagination();
-	function pageBtnTpl () {
-		var tpl = '<li class="page-item"><a class="page-link" href="#">{{PAGENO}}</a></li>';
-		return tpl;
-	}
+	});	
 
 	function initPagination() {
 		var $page = $('.pagination');
@@ -47,6 +73,7 @@ $(function () {
 		$page.find('.page-item').eq(pageNo-1).addClass('active');
 	}
 
+	initPagination();
 
 	function getQueryString(name) {  
 	    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");  
@@ -60,36 +87,6 @@ $(function () {
 	}
 
 
-
-	$('.pagination').on('click', '.page-item', function (){
-		var pageNo = parseInt($(this).text());
-		var pageSize = PAGE_SIZE;
-
-		window.location.href = 'http://127.0.0.1:5000/showResult?pageNo=' + pageNo +'&pageSize=' + pageSize;
-	});
-
-
-	$('.thumbnail').on('click', function (ev) {
-		var $ctx = $(this).closest('.well');
-		var type = $ctx.attr('data-type');
-		var volNo = $(this).find('h4').text();
-		var data = [];
-
-		switch(type){
-			case 'pic':
-				data = $(this).find('img').map(function () {
-					return $(this).attr('data-src');
-				});
-				break;
-			case 'mp3':
-				data = $(this).find('li').map(function () {
-					return $(this).text();
-				});
-				break;
-		}
-		console.log('data', data);
-		showResultDetail(volNo, type, $(this), data);
-	});
 
 
 	var buildList = {
@@ -131,6 +128,10 @@ $(function () {
 		$modalBody.html(list.join(''));
 	}
 
+	function pageBtnTpl () {
+		var tpl = '<li class="page-item"><a class="page-link" href="#">{{PAGENO}}</a></li>';
+		return tpl;
+	}
 
 	function mp3Tpl () {
 		var tpl = '<div class="col-xs-6 col-md-4">\

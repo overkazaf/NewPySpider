@@ -15,50 +15,56 @@ $(function() {
     	}
     };
 
-    $('.dropdown-menu').on('click', 'li', function (ev) {
-    	var $target = $(ev.currentTarget);
-    	var $container = $target.closest('.btn-group');
-    	$target.addClass('active').siblings().removeClass('active');
-    	var chartType = $target.text();
+    function bindEvents () {
+    	$('.dropdown-menu').on('click', 'li', function (ev) {
+	    	var $target = $(ev.currentTarget);
+	    	var $container = $target.closest('.btn-group');
+	    	$target.addClass('active').siblings().removeClass('active');
+	    	var chartType = $target.text();
 
-    	$container.find('.chart-type').text(chartType);
+	    	$container.find('.chart-type').text(chartType);
 
-    });
+	    });
 
-    $('.dropdown-range').on('click', 'li', function(ev) {
-        var $target = $(ev.currentTarget);
-        var $dropdown = $target.closest('.dropdown');
-        var $targetSpan = $dropdown.find('span');
-        var targetText = $target.text();
-        var $inputs = $target.find('input');
-        if ($inputs.length) {
-        	var ret = true;
-        	$inputs.each(function () {
-        		if ($.trim($(this).val()) == '') {
-        			ret = false;
-        		}
+	    $('.dropdown-range').on('click', 'li', function(ev) {
+	        var $target = $(ev.currentTarget);
+	        var $dropdown = $target.closest('.dropdown');
+	        var $targetSpan = $dropdown.find('span');
+	        var targetText = $target.text();
+	        var $inputs = $target.find('input');
+	        if ($inputs.length) {
+	        	var ret = true;
+	        	$inputs.each(function () {
+	        		if ($.trim($(this).val()) == '') {
+	        			ret = false;
+	        		}
 
-        		if ($inputs.length == 2 && isNaN($.trim($(this).val()))) {
-        			ret = false;
-        		}
-        	});
-        	if (!ret) return;
-        }
+	        		if ($inputs.length == 2 && isNaN($.trim($(this).val()))) {
+	        			ret = false;
+	        		}
+	        	});
+	        	if (!ret) return;
+	        }
 
-        $target.addClass('active').siblings().removeClass('active');
+	        $target.addClass('active').siblings().removeClass('active');
 
 
-        if ($inputs.length == 2) {
-    		var range = $target.find('input').map(function () {
-    			return $(this).val();
-    		});
-    		targetText = range[0] + ' 期 到 ' + range[1] + ' 期';
-    	} else if ($inputs.length == 1) {
-    		var range = $inputs.val();
-    		targetText = '第 ' + range + ' 期';
-    	}
-        $targetSpan.text(targetText);
-    });
+	        if ($inputs.length == 2) {
+	    		var range = $target.find('input').map(function () {
+	    			return $(this).val();
+	    		});
+	    		targetText = range[0] + ' 期 到 ' + range[1] + ' 期';
+	    	} else if ($inputs.length == 1) {
+	    		var range = $inputs.val();
+	    		targetText = '第 ' + range + ' 期';
+	    	}
+	        $targetSpan.text(targetText);
+	    });
+    }
+
+    bindEvents();
+
+    
 
     function ChartModel () {};
     ChartModel.prototype = {
@@ -213,6 +219,7 @@ $(function() {
 
     		// 1. cache data
     		cacheChartData(data);
+    		console.log('data', data);
 
     		// 2. compose data
     		var mergedData = mergeChartData(clonedList, data);
@@ -232,10 +239,6 @@ $(function() {
     		}, 2000);
     		
     	})
-    }
-
-    function setButtonEnabled (flag) {
-    	$('#genChart').prop('readonly', flag);
     }
 
     /**
@@ -460,7 +463,7 @@ $(function() {
 			    },
 			    tooltip : {
 			        trigger: 'item',
-			        formatter: "{a} <br/>{b} : {c} ({d}次)"
+			        formatter: "{a} <br/>{b} : {c} ({d}%)"
 			    },
 			    legend: {
 			        x : 'center',
@@ -514,7 +517,7 @@ $(function() {
 			            name:'面积模式',
 			            type:'pie',
 			            radius : [30, 110],
-			            center : ['75%', 200],
+			            center : ['65%', 200],
 			            roseType : 'area',
 			            x: '50%',               // for funnel
 			            max: 40,                // for funnel
@@ -529,7 +532,7 @@ $(function() {
     };
 
     function domTpl () {
-    	var tpl = '<div id="main" style="margin-top: 80px;width: 600px; height: 500px;"></div>';
+    	var tpl = '<div id="main" style="margin-top: 80px;width: 700px; height: 500px;"></div>';
 
             return tpl;
     }

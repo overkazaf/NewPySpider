@@ -4,6 +4,7 @@ import spider as Spider
 ' controller module '
 
 __author__ = 'overkazaf'
+__email__ = 'overkazaf@gmail.com'
 __resource__ = 'static'
 
 def isExcludeFiles(ext):
@@ -98,6 +99,7 @@ def getLocalResources (pageNo, pageSize):
 		dict['pic'].append(ret2)
 	return dict
 
+#to check how is the current status in local static folder
 def getTotalFolderCounts ():
 	dirs = os.listdir(__resource__)
 	dirs = filterPath(dirs)
@@ -123,7 +125,7 @@ def getVolRange ():
 
 	return {'min': int(minVol), 'max': int(maxVol)}
 
-
+#dispatch scheduler by given task type
 def runScheduler(type, start, end):
 	tasks = []
 
@@ -176,11 +178,10 @@ def getPicFilesByVol(vol):
 
 	
 def getTaskCompletion(type, rangeType, start, end):
-	
-	print 'start collecting data'
-	range = getVolRange()
 
-	print 'range,', range
+	range = getVolRange()
+	print 'local volumn range,', range
+	
 	if rangeType == 'forward':
 		start = range['max']
 		end = int(start) + int(end) - 1
@@ -190,6 +191,7 @@ def getTaskCompletion(type, rangeType, start, end):
 		start = int(temp) - int(end)
 		end = int(temp) - 1
 
+		#prevent index of to bound exception
 		if start < 1:
 			start = 1
 		if end < 1:
@@ -201,14 +203,12 @@ def getTaskCompletion(type, rangeType, start, end):
 
 	if type == 'all' or type == 'mp3':
 		music = getMusicCompletion(type, rangeType, start, end)
-		print 'music data done'
+		print 'collecting music data done'
 
 	if type == 'all' or type == 'pic':
 		picture = getPictureCompletion(type, rangeType, start, end)
-		print 'picture data done'
+		print 'collecting picture data done'
 
-	#print 'picture completion, ', picture['total'], ' ', picture.done
-	#print 'music completion, ', music['total'], ' ', music['done']
 	return {'total':{'mp3':music['total'], 'pic':picture['total']}, 'done':{'mp3': music['done'], 'pic': picture['done']}}
 
 
