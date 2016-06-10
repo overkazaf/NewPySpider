@@ -20,7 +20,6 @@ $(function() {
         musicDoneUrl = prefix + musicDoneInterface,
         taskCompletionUrl = prefix + taskCompletionInterface,
         cancelScheduleUrl = prefix + cancelScheduleInterface,
-
         testUrl = prefix + 'test',
         interval,
         DONE = false;
@@ -44,6 +43,14 @@ $(function() {
         $('#startCrawl').addClass('disabled');
     }
 
+    function checkParamCount () {
+        var a = $('.navbar-nav[data-type="type"]').find('.dropdown-menu>li.active').length;
+        var b = $('.navbar-nav[data-type="interval"]').find('.dropdown-menu>li.active').length;
+        var c = $('.navbar-nav[data-type="range"]').find('.dropdown-menu>li.active').length;
+
+        return a && b && c;
+    }
+
 
     /**
      * [bindEvents 绑定页面中的事件]
@@ -65,9 +72,14 @@ $(function() {
             // 清理状态轮询的计时器
             if (interval) clearInterval(interval);
 
+            if (!checkParamCount()) {
+                alert('请检查参数是否选择完整');
+                return;
+            }
+
             // 爬虫参数检测，暂不细做
             if (!validateCrawlParam()) {
-                alert('请检查参数');
+                alert('请检查参数是否合法');
                 return;
             }
 
