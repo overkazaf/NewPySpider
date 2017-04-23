@@ -55,7 +55,7 @@ def getMaxPictureCount(volNumber):
 def getMaxMusicCount(volNumber):
 	initdir(volNumber)
 	
-	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
+	prefix = "http://mp3-cdn.luoo.net/low/luoo/radio"
 	surl = ''
 	goon = 1
 	mnumber = 1
@@ -97,7 +97,7 @@ def getMusic(volNumber):
 	#如果出现异常，则退出循环
 	goon = 1
 	mnumber = 1
-	prefix = "http://luoo-mp3.kssws.ks-cdn.com/low/luoo/radio"
+	prefix = "http://mp3-cdn.luoo.net/low/luoo/radio"
 	tasks = []
 
 	#total = getMaxMusicCount(volNumber)
@@ -112,6 +112,8 @@ def getMusic(volNumber):
 				surl = prefix + str(volNumber)+"/"+str(mnumber)+".mp3"
 
 			data = httpClient.crawlerResource(surl, "GET", None)
+
+			print 'Crawering ', surl, ' ll'
 
 			filepath = "./static/vol."+str(volNumber)+"/mp3/"+str(mnumber)+".mp3"
 
